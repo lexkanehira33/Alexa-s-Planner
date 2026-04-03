@@ -256,7 +256,9 @@ async function fetchAndStoreEvents(){
       if(name==='School Assignments') schoolEvents.push(...evts);
       else if(name==='Alexa Kanehira'||name==='My Calendar'||cal.primary) apptEvents.push(...evts);
     }
-    state.calEvents={appt:apptEvents,school:schoolEvents};
+    const wk=weekKey(weekOffset);
+    if(!state.calEvents) state.calEvents={};
+    state.calEvents[wk]={appt:apptEvents,school:schoolEvents};
     state.lastSynced=new Date().toISOString();
     save();
     renderCalChips();
@@ -265,8 +267,10 @@ async function fetchAndStoreEvents(){
 }
 
 function renderCalChips(){
-  renderChips('apptChips',state.calEvents.appt||[],'personal');
-  renderChips('dueChips',state.calEvents.school||[],'school');
+  const wk=weekKey(weekOffset);
+  const weekData=state.calEvents&&state.calEvents[wk];
+  renderChips('apptChips',weekData?weekData.appt:[],'personal');
+  renderChips('dueChips',weekData?weekData.school:[],'school');
 }
 
 function renderChips(elId,events,type){
