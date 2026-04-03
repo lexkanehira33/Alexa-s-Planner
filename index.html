@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planner</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  :root {
+    --bg:#0f0e14;--bg2:#17151f;--bg3:#1e1b2a;--bg4:#252236;
+    --border:#2e2a42;--border2:#3d3860;
+    --purple:#a393d6;--purple2:#7c6bbf;--purple3:#534ab7;--purple-soft:#2a2540;
+    --grey:#b4b2a9;--grey2:#888780;--grey3:#444441;
+    --text:#e8e4f0;--text2:#a8a4b8;--text3:#6b6880;
+    --accent:#c4b5f0;--radius:12px;--radius-sm:8px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;}
+  .nav{display:flex;gap:4px;padding:16px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;align-items:center;}
+  .nav-btn{padding:8px 18px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:13px;transition:all 0.2s;}
+  .nav-btn.active{background:var(--purple-soft);border-color:var(--purple2);color:var(--accent);}
+  .nav-btn:hover:not(.active){border-color:var(--border2);color:var(--text);}
+  .gcal-btn{margin-left:auto;padding:7px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-size:12px;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
+  .gcal-btn.connected{border-color:#1d9e75;color:#5dcaa5;}
+  .gcal-btn:hover{border-color:var(--purple2);color:var(--accent);}
+  .page{display:none;padding:20px;max-width:900px;margin:0 auto;}
+  .page.active{display:block;}
+  .week-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+  .week-title{font-size:18px;font-weight:500;color:var(--accent);}
+  .week-nav{display:flex;gap:8px;}
+  .week-nav button{background:var(--bg3);border:1px solid var(--border);color:var(--text2);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;transition:all 0.2s;}
+  .week-nav button:hover{border-color:var(--purple2);color:var(--accent);}
+  .glance-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;}
+  .section-label{font-size:11px;font-weight:500;letter-spacing:0.08em;color:var(--purple);text-transform:uppercase;margin-bottom:10px;}
+  .due-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px;min-height:28px;}
+  .chip{padding:4px 12px;border-radius:20px;font-size:12px;border:1px solid;}
+  .chip-school{background:#1a1535;border-color:var(--purple2);color:var(--accent);}
+  .chip-personal{background:#131d1a;border-color:#1d9e75;color:#5dcaa5;}
+  .chip-empty{color:var(--text3);font-size:12px;font-style:italic;padding:4px 0;}
+  .divider{border-top:1px solid var(--border);margin:12px 0;}
+  .todo-input-row{display:flex;gap:8px;margin-top:8px;}
+  .todo-input-row input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;color:var(--text);font-size:13px;outline:none;}
+  .todo-input-row input:focus{border-color:var(--purple2);}
+  .todo-input-row button{background:var(--purple-soft);border:1px solid var(--purple2);color:var(--accent);padding:8px 14px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;}
+  .todo-item{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);}
+  .todo-item:last-child{border-bottom:none;}
+  .todo-item input[type=checkbox]{margin-top:2px;accent-color:var(--purple3);width:15px;height:15px;cursor:pointer;flex-shrink:0;}
+  .todo-item label{font-size:13px;color:var(--text2);cursor:pointer;line-height:1.4;}
+  .todo-item.done label{text-decoration:line-through;color:var(--text3);}
+  .todo-item .del{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;}
+  .todo-item .del:hover{color:#e24b4a;}
+  .days-grid{display:flex;flex-direction:column;gap:12px;}
+  .day-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+  .day-card.today{border-color:var(--purple2);}
+  .day-header{background:var(--bg3);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+  .day-name{font-size:13px;font-weight:500;color:var(--accent);}
+  .day-date{font-size:12px;color:var(--text3);}
+  .day-toggle{color:var(--text3);font-size:12px;transition:transform 0.2s;}
+  .day-toggle.open{transform:rotate(180deg);}
+  .day-body{padding:14px 16px;display:none;}
+  .day-body.open{display:block;}
+  .day-section{margin-bottom:14px;}
+  .day-section:last-child{margin-bottom:0;}
+  .day-section-label{font-size:10px;font-weight:500;letter-spacing:0.07em;color:var(--grey2);text-transform:uppercase;margin-bottom:6px;}
+  .day-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;color:var(--text);font-size:13px;resize:none;outline:none;font-family:inherit;line-height:1.5;}
+  .day-textarea:focus{border-color:var(--purple2);}
+  .lists-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+  .list-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
+  .list-title{font-size:14px;font-weight:500;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+  .list-title .clear-btn{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;padding:2px 6px;}
+  .list-title .clear-btn:hover{color:var(--purple);}
+  .goals-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;}
+  .year-label{font-size:22px;font-weight:500;color:var(--purple);margin-bottom:4px;}
+  .goals-sub{font-size:12px;color:var(--text3);margin-bottom:16px;}
+  .goal-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+  .goal-item:last-child{border-bottom:none;}
+  .goal-item input[type=checkbox]{margin-top:3px;accent-color:var(--purple3);width:15px;height:15px;cursor:pointer;flex-shrink:0;}
+  .goal-item label{font-size:14px;color:var(--text);cursor:pointer;flex:1;line-height:1.5;min-width:120px;}
+  .goal-item .del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 4px;}
+  .goal-item .del:hover{color:#e24b4a;}
+  .goal-note-wrap{width:100%;padding-left:25px;margin-top:4px;}
+  .goal-note{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 10px;color:var(--text2);font-size:12px;resize:none;outline:none;font-family:inherit;line-height:1.5;}
+  .goal-note:focus{border-color:var(--purple2);}
+  .archive-section{margin-top:24px;}
+  .archive-toggle{background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;padding:0;display:flex;align-items:center;gap:6px;letter-spacing:0.05em;text-transform:uppercase;font-weight:500;}
+  .archive-toggle:hover{color:var(--purple);}
+  .archive-list{margin-top:12px;}
+  .archive-item{padding:10px 0;border-bottom:1px solid var(--border);}
+  .archive-item:last-child{border-bottom:none;}
+  .archive-item-text{font-size:14px;color:var(--text3);text-decoration:line-through;margin-bottom:4px;}
+  .archive-item-note{font-size:12px;color:var(--text3);padding-left:4px;font-style:italic;}
+  .progress-bar-wrap{height:4px;background:var(--bg4);border-radius:4px;margin-bottom:16px;}
+  .progress-bar{height:4px;background:var(--purple2);border-radius:4px;transition:width 0.3s;}
+  .progress-label{font-size:11px;color:var(--text3);margin-bottom:12px;}
+  .add-goal-row{display:flex;gap:8px;margin-top:14px;}
+  .add-goal-row input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;color:var(--text);font-size:13px;outline:none;}
+  .add-goal-row input:focus{border-color:var(--purple2);}
+  .add-goal-row button{background:var(--purple-soft);border:1px solid var(--purple2);color:var(--accent);padding:9px 16px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;white-space:nowrap;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="showPage('weekly',this)">Weekly</button>
+  <button class="nav-btn" onclick="showPage('shopping',this)">Shopping</button>
+  <button class="nav-btn" onclick="showPage('goals',this)">Goals</button>
+  <button class="gcal-btn" id="gcalBtn" onclick="handleGcalAuth()">
+    <span id="gcalStatus">Connect Google Calendar</span>
+  </button>
+</nav>
+
+<div id="weekly" class="page active">
+  <div class="week-header">
+    <div class="week-title" id="weekTitle"></div>
+    <div class="week-nav">
+      <button onclick="changeWeek(-1)">&#8249;</button>
+      <button onclick="changeWeek(0)">Today</button>
+      <button onclick="changeWeek(1)">&#8250;</button>
+    </div>
+  </div>
+  <div class="glance-card">
+    <div class="section-label">Appointments this week</div>
+    <div class="due-chips" id="apptChips"><span class="chip-empty">Connect Google Calendar to see appointments</span></div>
+    <div class="divider"></div>
+    <div class="section-label">School due this week</div>
+    <div class="due-chips" id="dueChips"><span class="chip-empty">Connect Google Calendar to see due dates</span></div>
+    <div class="divider"></div>
+    <div class="section-label">Weekly to-do</div>
+    <div id="weeklyTodos"></div>
+    <div class="todo-input-row">
+      <input type="text" id="weeklyInput" placeholder="Add to weekly list..." onkeydown="if(event.key==='Enter')addWeeklyTodo()">
+      <button onclick="addWeeklyTodo()">Add</button>
+    </div>
+  </div>
+  <div class="days-grid" id="daysGrid"></div>
+</div>
+
+<div id="shopping" class="page">
+  <div class="lists-grid" id="shoppingLists"></div>
+</div>
+
+<div id="goals" class="page">
+  <div class="goals-section">
+    <div class="year-label" id="yearLabel"></div>
+    <div class="goals-sub">Annual goals — completed items move to the archive below</div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="progress-label" id="progressLabel"></div>
+    <div id="goalsList"></div>
+    <div class="add-goal-row">
+      <input type="text" id="goalInput" placeholder="Add a goal for this year..." onkeydown="if(event.key==='Enter')addGoal()">
+      <button onclick="addGoal()">Add goal</button>
+    </div>
+  </div>
+  <div class="goals-section archive-section" id="archiveSection" style="display:none">
+    <button class="archive-toggle" onclick="toggleArchive()">
+      <span id="archiveArrow">▸</span> Completed goals (<span id="archiveCount">0</span>)
+    </button>
+    <div class="archive-list" id="archiveList" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+const CLIENT_ID = '275549994850-knh5mqkh36io08c7ingl5i1v8k2hfrd6.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+let weekOffset = 0;
+let accessToken = null;
+let calendarColors = {};
+
+let state = JSON.parse(localStorage.getItem('plannerState2') || 'null') || {
+  weeklyTodos:{}, daySchedule:{}, daySchool:{}, dayTodos:{}, dayAppts:{},
+  shopping:{sams:[],misc:[],grocery:[]}, goals:[]
+};
+function save(){ localStorage.setItem('plannerState2', JSON.stringify(state)); }
+
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+// --- GOOGLE AUTH ---
+function handleGcalAuth() {
+  if(accessToken){ disconnectGcal(); return; }
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    callback: (resp) => {
+      if(resp.access_token){
+        accessToken = resp.access_token;
+        document.getElementById('gcalBtn').classList.add('connected');
+        document.getElementById('gcalStatus').textContent = 'Calendar connected';
+        fetchCalendarEvents();
+      }
+    }
+  });
+  client.requestAccessToken();
+}
+
+function disconnectGcal(){
+  accessToken = null;
+  document.getElementById('gcalBtn').classList.remove('connected');
+  document.getElementById('gcalStatus').textContent = 'Connect Google Calendar';
+  document.getElementById('apptChips').innerHTML = '<span class="chip-empty">Connect Google Calendar to see appointments</span>';
+  document.getElementById('dueChips').innerHTML = '<span class="chip-empty">Connect Google Calendar to see due dates</span>';
+}
+
+// --- FETCH CALENDARS ---
+async function fetchCalendarColors() {
+  const r = await fetch('https://www.googleapis.com/calendar/v3/colors', {
+    headers:{Authorization:'Bearer '+accessToken}
+  });
+  const d = await r.json();
+  return d;
+}
+
+async function fetchCalendarList() {
+  const r = await fetch('https://www.googleapis.com/calendar/v3/users/me/calendarList', {
+    headers:{Authorization:'Bearer '+accessToken}
+  });
+  return await r.json();
+}
+
+async function fetchCalendarEvents() {
+  try {
+    const ws = getWeekStart(weekOffset);
+    const we = new Date(ws); we.setDate(we.getDate()+7);
+    const tMin = ws.toISOString();
+    const tMax = we.toISOString();
+
+    const calList = await fetchCalendarList();
+    const cals = calList.items || [];
+
+    let apptEvents = [];
+    let schoolEvents = [];
+
+    for(const cal of cals) {
+      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(cal.id)}/events?timeMin=${tMin}&timeMax=${tMax}&singleEvents=true&orderBy=startTime`;
+      const r = await fetch(url, {headers:{Authorization:'Bearer '+accessToken}});
+      const d = await r.json();
+      const evts = (d.items||[]).map(e=>({
+        ...e,
+        calName: cal.summary,
+        calColor: cal.backgroundColor || '#7c6bbf',
+        calId: cal.id
+      }));
+
+      const name = cal.summary.toLowerCase();
+      if(name.includes('school') || name.includes('due') || name.includes('assignment')){
+        schoolEvents.push(...evts);
+      } else {
+        apptEvents.push(...evts);
+      }
+    }
+
+    renderChips('apptChips', apptEvents, 'personal');
+    renderChips('dueChips', schoolEvents, 'school');
+  } catch(e) {
+    console.error('Calendar fetch error', e);
+  }
+}
+
+function renderChips(elId, events, type) {
+  const el = document.getElementById(elId);
+  if(!events.length){
+    el.innerHTML = '<span class="chip-empty">Nothing this week</span>';
+    return;
+  }
+  el.innerHTML = events.map(e => {
+    const start = e.start?.dateTime || e.start?.date || '';
+    const d = start ? new Date(start) : null;
+    const dateStr = d ? DAYS[d.getDay()].slice(0,3)+' '+d.getDate() : '';
+    const bg = type==='school' ? '#1a1535' : '#131d1a';
+    const borderColor = type==='school' ? e.calColor||'#7c6bbf' : e.calColor||'#1d9e75';
+    const textColor = type==='school' ? '#c4b5f0' : '#5dcaa5';
+    return `<span class="chip" style="background:${bg};border-color:${borderColor};color:${textColor}">${dateStr ? dateStr+' · ' : ''}${e.summary||'Event'}</span>`;
+  }).join('');
+}
+
+// --- WEEK ---
+function getWeekStart(offset){
+  const d=new Date(); d.setDate(d.getDate()-d.getDay()+offset*7); d.setHours(0,0,0,0); return d;
+}
+function weekKey(offset){ return getWeekStart(offset).toISOString().slice(0,10); }
+function dayKey(date){ return date.toISOString().slice(0,10); }
+
+function changeWeek(dir){
+  if(dir===0) weekOffset=0; else weekOffset+=dir;
+  renderWeekly();
+  if(accessToken) fetchCalendarEvents();
+}
+
+function renderWeekly(){
+  const ws=getWeekStart(weekOffset);
+  const we=new Date(ws); we.setDate(we.getDate()+6);
+  document.getElementById('weekTitle').textContent =
+    MONTHS[ws.getMonth()]+' '+ws.getDate()+' – '+
+    (ws.getMonth()!==we.getMonth()?MONTHS[we.getMonth()]+' ':'')+we.getDate()+', '+we.getFullYear();
+  const wk=weekKey(weekOffset);
+  if(!state.weeklyTodos[wk]) state.weeklyTodos[wk]=[];
+  renderWeeklyTodos();
+  renderDays(ws);
+}
+
+function renderWeeklyTodos(){
+  const wk=weekKey(weekOffset);
+  const todos=state.weeklyTodos[wk]||[];
+  document.getElementById('weeklyTodos').innerHTML=todos.map((t,i)=>`
+    <div class="todo-item ${t.done?'done':''}">
+      <input type="checkbox" ${t.done?'checked':''} onchange="toggleWeekly(${i})">
+      <label onclick="toggleWeekly(${i})">${t.text}</label>
+      <button class="del" onclick="deleteWeekly(${i})">×</button>
+    </div>`).join('');
+}
+
+function addWeeklyTodo(){
+  const inp=document.getElementById('weeklyInput');
+  const v=inp.value.trim(); if(!v) return;
+  const wk=weekKey(weekOffset);
+  if(!state.weeklyTodos[wk]) state.weeklyTodos[wk]=[];
+  state.weeklyTodos[wk].push({text:v,done:false});
+  inp.value=''; save(); renderWeeklyTodos();
+}
+function toggleWeekly(i){ const wk=weekKey(weekOffset); state.weeklyTodos[wk][i].done=!state.weeklyTodos[wk][i].done; save(); renderWeeklyTodos(); }
+function deleteWeekly(i){ const wk=weekKey(weekOffset); state.weeklyTodos[wk].splice(i,1); save(); renderWeeklyTodos(); }
+
+function renderDays(ws){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const grid=document.getElementById('daysGrid'); grid.innerHTML='';
+  for(let i=0;i<7;i++){
+    const d=new Date(ws); d.setDate(d.getDate()+i);
+    const dk=dayKey(d);
+    const isToday=d.getTime()===today.getTime();
+    const card=document.createElement('div');
+    card.className='day-card'+(isToday?' today':'');
+    card.innerHTML=`
+      <div class="day-header" onclick="toggleDay('${dk}',this)">
+        <div><span class="day-name">${DAYS[d.getDay()]}</span><span class="day-date" style="margin-left:8px">${MONTHS[d.getMonth()].slice(0,3)} ${d.getDate()}</span></div>
+        <span class="day-toggle ${isToday?'open':''}">▾</span>
+      </div>
+      <div class="day-body ${isToday?'open':''}">
+        <div class="day-section">
+          <div class="day-section-label">Schedule</div>
+          <textarea class="day-textarea" rows="3" placeholder="Write out your day..." onchange="saveField('daySchedule','${dk}',this.value)">${state.daySchedule[dk]||''}</textarea>
+        </div>
+        <div class="day-section">
+          <div class="day-section-label">School</div>
+          <textarea class="day-textarea" rows="2" placeholder="What do you want to accomplish today for school?" onchange="saveField('daySchool','${dk}',this.value)">${state.daySchool[dk]||''}</textarea>
+        </div>
+        <div class="day-section">
+          <div class="day-section-label">To-do</div>
+          <div id="dt-${dk}"></div>
+          <div class="todo-input-row">
+            <input type="text" id="dti-${dk}" placeholder="Add task..." onkeydown="if(event.key==='Enter')addDayTodo('${dk}')">
+            <button onclick="addDayTodo('${dk}')">Add</button>
+          </div>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+    renderDayTodos(dk);
+  }
+}
+
+function toggleDay(dk,header){ const body=header.nextElementSibling; const arrow=header.querySelector('.day-toggle'); body.classList.toggle('open'); arrow.classList.toggle('open'); }
+function saveField(field,dk,v){ if(!state[field]) state[field]={}; state[field][dk]=v; save(); }
+
+function renderDayTodos(dk){
+  const todos=state.dayTodos[dk]||[];
+  const el=document.getElementById('dt-'+dk); if(!el) return;
+  el.innerHTML=todos.map((t,i)=>`
+    <div class="todo-item ${t.done?'done':''}">
+      <input type="checkbox" ${t.done?'checked':''} onchange="toggleDayTodo('${dk}',${i})">
+      <label onclick="toggleDayTodo('${dk}',${i})">${t.text}</label>
+      <button class="del" onclick="deleteDayTodo('${dk}',${i})">×</button>
+    </div>`).join('');
+}
+function addDayTodo(dk){ const inp=document.getElementById('dti-'+dk); const v=inp.value.trim(); if(!v) return; if(!state.dayTodos[dk]) state.dayTodos[dk]=[]; state.dayTodos[dk].push({text:v,done:false}); inp.value=''; save(); renderDayTodos(dk); }
+function toggleDayTodo(dk,i){ state.dayTodos[dk][i].done=!state.dayTodos[dk][i].done; save(); renderDayTodos(dk); }
+function deleteDayTodo(dk,i){ state.dayTodos[dk].splice(i,1); save(); renderDayTodos(dk); }
+
+// --- SHOPPING ---
+const LISTS=[{key:'sams',label:"Sam's Club"},{key:'misc',label:'Misc'},{key:'grocery',label:'Weekly groceries'}];
+function renderShopping(){
+  document.getElementById('shoppingLists').innerHTML=LISTS.map(l=>`
+    <div class="list-card">
+      <div class="list-title">${l.label}<button class="clear-btn" onclick="clearChecked('${l.key}')">Clear all checked</button></div>
+      <div id="sl-${l.key}"></div>
+      <div class="todo-input-row">
+        <input type="text" id="sli-${l.key}" placeholder="Add item..." onkeydown="if(event.key==='Enter')addShop('${l.key}')">
+        <button onclick="addShop('${l.key}')">Add</button>
+      </div>
+    </div>`).join('');
+  LISTS.forEach(l=>renderShopList(l.key));
+}
+function renderShopList(key){
+  const items=state.shopping[key]||[];
+  const el=document.getElementById('sl-'+key); if(!el) return;
+  el.innerHTML=items.map((t,i)=>`
+    <div class="todo-item">
+      <input type="checkbox" onchange="checkShop('${key}',${i},this.checked)">
+      <label>${t}</label>
+      <button class="del" onclick="deleteShop('${key}',${i})">×</button>
+    </div>`).join('')||'<div style="color:var(--text3);font-size:12px;padding:4px 0">List is empty</div>';
+}
+function addShop(key){ const inp=document.getElementById('sli-'+key); const v=inp.value.trim(); if(!v) return; state.shopping[key].push(v); inp.value=''; save(); renderShopList(key); }
+function checkShop(key,i){ setTimeout(()=>{ state.shopping[key].splice(i,1); save(); renderShopList(key); },500); }
+function deleteShop(key,i){ state.shopping[key].splice(i,1); save(); renderShopList(key); }
+function clearChecked(key){ renderShopList(key); }
+
+// --- GOALS ---
+function renderGoals(){
+  document.getElementById('yearLabel').textContent=new Date().getFullYear()+' Goals';
+  const active=state.goals.filter(g=>!g.done);
+  const archived=state.goals.filter(g=>g.done);
+  const total=state.goals.length;
+  const pct=total?Math.round(archived.length/total*100):0;
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressLabel').textContent=total?archived.length+' of '+total+' goals completed ('+pct+'%)':'Add your first goal below';
+  document.getElementById('goalsList').innerHTML=active.map(g=>{
+    const ri=state.goals.indexOf(g);
+    return `<div class="goal-item">
+      <input type="checkbox" onchange="toggleGoal(${ri})">
+      <label>${g.text}</label>
+      <button class="del" onclick="deleteGoal(${ri})">×</button>
+      <div class="goal-note-wrap"><textarea class="goal-note" rows="2" placeholder="Add notes, reflections..." onchange="saveGoalNote(${ri},this.value)">${g.note||''}</textarea></div>
+    </div>`;
+  }).join('')||'<div style="color:var(--text3);font-size:13px;padding:8px 0">No active goals — add one below</div>';
+  const archSec=document.getElementById('archiveSection');
+  const archList=document.getElementById('archiveList');
+  if(archived.length){
+    archSec.style.display='block';
+    document.getElementById('archiveCount').textContent=archived.length;
+    archList.innerHTML=archived.map(g=>`
+      <div class="archive-item">
+        <div class="archive-item-text">${g.text}</div>
+        ${g.note?'<div class="archive-item-note">'+g.note+'</div>':''}
+      </div>`).join('');
+  } else { archSec.style.display='none'; }
+}
+let archiveOpen=false;
+function toggleArchive(){ archiveOpen=!archiveOpen; document.getElementById('archiveList').style.display=archiveOpen?'block':'none'; document.getElementById('archiveArrow').textContent=archiveOpen?'▾':'▸'; }
+function addGoal(){ const inp=document.getElementById('goalInput'); const v=inp.value.trim(); if(!v) return; state.goals.push({text:v,done:false,note:''}); inp.value=''; save(); renderGoals(); }
+function toggleGoal(i){ state.goals[i].done=!state.goals[i].done; save(); renderGoals(); }
+function deleteGoal(i){ state.goals.splice(i,1); save(); renderGoals(); }
+function saveGoalNote(i,v){ state.goals[i].note=v; save(); }
+
+// INIT
+renderWeekly();
+renderShopping();
+renderGoals();
+</script>
+</body>
+</html>
