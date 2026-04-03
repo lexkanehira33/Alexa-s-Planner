@@ -7,20 +7,25 @@
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   :root {
-    --bg:#0f0e14;--bg2:#17151f;--bg3:#1e1b2a;--bg4:#252236;
-    --border:#2e2a42;--border2:#3d3860;
-    --purple:#a393d6;--purple2:#7c6bbf;--purple3:#534ab7;--purple-soft:#2a2540;
+    --bg:#080808;--bg2:#0f0f0f;--bg3:#161616;--bg4:#1c1c1c;
+    --border:#222222;--border2:#333333;
+    --purple:#a393d6;--purple2:#7c6bbf;--purple3:#534ab7;--purple-soft:#1a1628;
     --grey:#b4b2a9;--grey2:#888780;--grey3:#444441;
-    --text:#e8e4f0;--text2:#a8a4b8;--text3:#6b6880;
+    --text:#e8e4f0;--text2:#a8a4b8;--text3:#555260;
     --accent:#c4b5f0;--radius:12px;--radius-sm:8px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;}
-  .nav{display:flex;gap:4px;padding:16px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;align-items:center;}
-  .nav-btn{padding:8px 18px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:13px;transition:all 0.2s;}
+  .nav{display:flex;gap:4px;padding:14px 16px;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;align-items:center;}
+  .nav-btn{padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:13px;transition:all 0.2s;}
   .nav-btn.active{background:var(--purple-soft);border-color:var(--purple2);color:var(--accent);}
   .nav-btn:hover:not(.active){border-color:var(--border2);color:var(--text);}
-  .gcal-btn{margin-left:auto;padding:7px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-size:12px;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
+  .nav-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+  .sync-btn{padding:7px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-size:12px;transition:all 0.2s;}
+  .sync-btn:hover{border-color:var(--purple2);color:var(--accent);}
+  .sync-btn.spinning{animation:spin 1s linear infinite;}
+  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  .gcal-btn{padding:7px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-size:12px;transition:all 0.2s;}
   .gcal-btn.connected{border-color:#1d9e75;color:#5dcaa5;}
   .gcal-btn:hover{border-color:var(--purple2);color:var(--accent);}
   .page{display:none;padding:20px;max-width:900px;margin:0 auto;}
@@ -34,8 +39,6 @@
   .section-label{font-size:11px;font-weight:500;letter-spacing:0.08em;color:var(--purple);text-transform:uppercase;margin-bottom:10px;}
   .due-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px;min-height:28px;}
   .chip{padding:4px 12px;border-radius:20px;font-size:12px;border:1px solid;}
-  .chip-school{background:#1a1535;border-color:var(--purple2);color:var(--accent);}
-  .chip-personal{background:#131d1a;border-color:#1d9e75;color:#5dcaa5;}
   .chip-empty{color:var(--text3);font-size:12px;font-style:italic;padding:4px 0;}
   .divider{border-top:1px solid var(--border);margin:12px 0;}
   .todo-input-row{display:flex;gap:8px;margin-top:8px;}
@@ -49,12 +52,12 @@
   .todo-item.done label{text-decoration:line-through;color:var(--text3);}
   .todo-item .del{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;}
   .todo-item .del:hover{color:#e24b4a;}
-  .days-grid{display:flex;flex-direction:column;gap:12px;}
+  .days-grid{display:flex;flex-direction:column;gap:10px;}
   .day-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
   .day-card.today{border-color:var(--purple2);}
   .day-header{background:var(--bg3);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
   .day-name{font-size:13px;font-weight:500;color:var(--accent);}
-  .day-date{font-size:12px;color:var(--text3);}
+  .day-date{font-size:12px;color:var(--text3);margin-left:8px;}
   .day-toggle{color:var(--text3);font-size:12px;transition:transform 0.2s;}
   .day-toggle.open{transform:rotate(180deg);}
   .day-body{padding:14px 16px;display:none;}
@@ -89,13 +92,14 @@
   .archive-item:last-child{border-bottom:none;}
   .archive-item-text{font-size:14px;color:var(--text3);text-decoration:line-through;margin-bottom:4px;}
   .archive-item-note{font-size:12px;color:var(--text3);padding-left:4px;font-style:italic;}
-  .progress-bar-wrap{height:4px;background:var(--bg4);border-radius:4px;margin-bottom:16px;}
-  .progress-bar{height:4px;background:var(--purple2);border-radius:4px;transition:width 0.3s;}
+  .progress-bar-wrap{height:3px;background:var(--bg4);border-radius:4px;margin-bottom:16px;}
+  .progress-bar{height:3px;background:var(--purple2);border-radius:4px;transition:width 0.3s;}
   .progress-label{font-size:11px;color:var(--text3);margin-bottom:12px;}
   .add-goal-row{display:flex;gap:8px;margin-top:14px;}
   .add-goal-row input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;color:var(--text);font-size:13px;outline:none;}
   .add-goal-row input:focus{border-color:var(--purple2);}
   .add-goal-row button{background:var(--purple-soft);border:1px solid var(--purple2);color:var(--accent);padding:9px 16px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;white-space:nowrap;}
+  .last-synced{font-size:11px;color:var(--text3);margin-left:4px;}
 </style>
 </head>
 <body>
@@ -104,9 +108,13 @@
   <button class="nav-btn active" onclick="showPage('weekly',this)">Weekly</button>
   <button class="nav-btn" onclick="showPage('shopping',this)">Shopping</button>
   <button class="nav-btn" onclick="showPage('goals',this)">Goals</button>
-  <button class="gcal-btn" id="gcalBtn" onclick="handleGcalAuth()">
-    <span id="gcalStatus">Connect Google Calendar</span>
-  </button>
+  <div class="nav-right">
+    <span class="last-synced" id="lastSynced"></span>
+    <button class="sync-btn" id="syncBtn" onclick="syncCalendar()" style="display:none">↻ Sync</button>
+    <button class="gcal-btn" id="gcalBtn" onclick="handleGcalAuth()">
+      <span id="gcalStatus">Connect Google Calendar</span>
+    </button>
+  </div>
 </nav>
 
 <div id="weekly" class="page active">
@@ -160,22 +168,22 @@
 </div>
 
 <script>
-const CLIENT_ID = '275549994850-knh5mqkh36io08c7ingl5i1v8k2hfrd6.apps.googleusercontent.com';
-const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
-const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const CLIENT_ID='275549994850-knh5mqkh36io08c7ingl5i1v8k2hfrd6.apps.googleusercontent.com';
+const SCOPES='https://www.googleapis.com/auth/calendar.readonly';
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-let weekOffset = 0;
-let accessToken = null;
-let calendarColors = {};
+let weekOffset=0;
+let accessToken=null;
 
-let state = JSON.parse(localStorage.getItem('plannerState2') || 'null') || {
-  weeklyTodos:{}, daySchedule:{}, daySchool:{}, dayTodos:{}, dayAppts:{},
-  shopping:{sams:[],misc:[],grocery:[]}, goals:[]
+let state=JSON.parse(localStorage.getItem('plannerState3')||'null')||{
+  weeklyTodos:{},daySchedule:{},daySchool:{},dayTodos:{},
+  shopping:{sams:[],misc:[],grocery:[]},goals:[],
+  calEvents:{appt:[],school:[]},lastSynced:null
 };
-function save(){ localStorage.setItem('plannerState2', JSON.stringify(state)); }
+function save(){ localStorage.setItem('plannerState3',JSON.stringify(state)); }
 
-function showPage(id, btn) {
+function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -183,17 +191,17 @@ function showPage(id, btn) {
 }
 
 // --- GOOGLE AUTH ---
-function handleGcalAuth() {
+function handleGcalAuth(){
   if(accessToken){ disconnectGcal(); return; }
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope: SCOPES,
-    callback: (resp) => {
+  const client=google.accounts.oauth2.initTokenClient({
+    client_id:CLIENT_ID, scope:SCOPES,
+    callback:(resp)=>{
       if(resp.access_token){
-        accessToken = resp.access_token;
+        accessToken=resp.access_token;
         document.getElementById('gcalBtn').classList.add('connected');
-        document.getElementById('gcalStatus').textContent = 'Calendar connected';
-        fetchCalendarEvents();
+        document.getElementById('gcalStatus').textContent='Disconnect calendar';
+        document.getElementById('syncBtn').style.display='block';
+        fetchAndStoreEvents();
       }
     }
   });
@@ -201,101 +209,98 @@ function handleGcalAuth() {
 }
 
 function disconnectGcal(){
-  accessToken = null;
+  accessToken=null;
   document.getElementById('gcalBtn').classList.remove('connected');
-  document.getElementById('gcalStatus').textContent = 'Connect Google Calendar';
-  document.getElementById('apptChips').innerHTML = '<span class="chip-empty">Connect Google Calendar to see appointments</span>';
-  document.getElementById('dueChips').innerHTML = '<span class="chip-empty">Connect Google Calendar to see due dates</span>';
+  document.getElementById('gcalStatus').textContent='Connect Google Calendar';
+  document.getElementById('syncBtn').style.display='none';
 }
 
-// --- FETCH CALENDARS ---
-async function fetchCalendarColors() {
-  const r = await fetch('https://www.googleapis.com/calendar/v3/colors', {
-    headers:{Authorization:'Bearer '+accessToken}
-  });
-  const d = await r.json();
-  return d;
+async function syncCalendar(){
+  if(!accessToken){
+    handleGcalAuth(); return;
+  }
+  const btn=document.getElementById('syncBtn');
+  btn.classList.add('spinning');
+  await fetchAndStoreEvents();
+  btn.classList.remove('spinning');
 }
 
-async function fetchCalendarList() {
-  const r = await fetch('https://www.googleapis.com/calendar/v3/users/me/calendarList', {
-    headers:{Authorization:'Bearer '+accessToken}
-  });
+async function fetchCalendarColors(){
+  const r=await fetch('https://www.googleapis.com/calendar/v3/colors',{headers:{Authorization:'Bearer '+accessToken}});
+  return await r.json();
+}
+async function fetchCalendarList(){
+  const r=await fetch('https://www.googleapis.com/calendar/v3/users/me/calendarList',{headers:{Authorization:'Bearer '+accessToken}});
   return await r.json();
 }
 
-async function fetchCalendarEvents() {
+async function fetchAndStoreEvents(){
   try {
-    const ws = getWeekStart(weekOffset);
-    const we = new Date(ws); we.setDate(we.getDate()+7);
-    const tMin = ws.toISOString();
-    const tMax = we.toISOString();
-
-    const [calList, colorData] = await Promise.all([
-      fetchCalendarList(),
-      fetchCalendarColors()
-    ]);
-    const cals = calList.items || [];
-    const eventColors = colorData.event || {};
-
-    let apptEvents = [];
-    let schoolEvents = [];
-
-    for(const cal of cals) {
-      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(cal.id)}/events?timeMin=${tMin}&timeMax=${tMax}&singleEvents=true&orderBy=startTime`;
-      const r = await fetch(url, {headers:{Authorization:'Bearer '+accessToken}});
-      const d = await r.json();
-      const evts = (d.items||[]).map(e=>({
-        ...e,
-        calName: cal.summary,
-        calColor: e.colorId ? (eventColors[e.colorId]?.background || cal.backgroundColor || '#7c6bbf') : (cal.backgroundColor || '#7c6bbf'),
-        calId: cal.id
-      }));
-
-      const name = cal.summary.trim();
-      if(name === 'School Assignments'){
-        schoolEvents.push(...evts);
-      } else if(name === 'Alexa Kanehira' || name === 'My Calendar' || cal.primary){
-        apptEvents.push(...evts);
-      }
+    const ws=getWeekStart(weekOffset);
+    const we=new Date(ws); we.setDate(we.getDate()+7);
+    const tMin=ws.toISOString(); const tMax=we.toISOString();
+    const [calList,colorData]=await Promise.all([fetchCalendarList(),fetchCalendarColors()]);
+    const cals=calList.items||[];
+    const eventColors=colorData.event||{};
+    let apptEvents=[]; let schoolEvents=[];
+    for(const cal of cals){
+      const url=`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(cal.id)}/events?timeMin=${tMin}&timeMax=${tMax}&singleEvents=true&orderBy=startTime`;
+      const r=await fetch(url,{headers:{Authorization:'Bearer '+accessToken}});
+      const d=await r.json();
+      const evts=(d.items||[]).map(e=>{
+        let color=cal.backgroundColor||'#7c6bbf';
+        if(e.colorId&&eventColors[e.colorId]) color=eventColors[e.colorId].background;
+        return{...e,calName:cal.summary,calColor:color,calId:cal.id};
+      });
+      const name=cal.summary.trim();
+      if(name==='School Assignments') schoolEvents.push(...evts);
+      else if(name==='Alexa Kanehira'||name==='My Calendar'||cal.primary) apptEvents.push(...evts);
     }
-
-    renderChips('apptChips', apptEvents, 'personal');
-    renderChips('dueChips', schoolEvents, 'school');
-  } catch(e) {
-    console.error('Calendar fetch error', e);
-  }
+    state.calEvents={appt:apptEvents,school:schoolEvents};
+    state.lastSynced=new Date().toISOString();
+    save();
+    renderCalChips();
+    updateLastSyncedLabel();
+  } catch(e){ console.error('Calendar fetch error',e); }
 }
 
-function renderChips(elId, events, type) {
-  const el = document.getElementById(elId);
-  if(!events.length){
-    el.innerHTML = '<span class="chip-empty">Nothing this week</span>';
-    return;
-  }
-  el.innerHTML = events.map(e => {
-    const start = e.start?.dateTime || e.start?.date || '';
-    let d = null;
-    if(start){
-      if(start.includes('T')){
-        d = new Date(start);
-      } else {
-        const [y,m,day] = start.split('-').map(Number);
-        d = new Date(y, m-1, day);
-      }
-    }
-    const dateStr = d ? DAYS[d.getDay()].slice(0,3)+' '+d.getDate() : '';
-    const bg = type==='school' ? '#1a1535' : '#131d1a';
-    const borderColor = type==='school' ? e.calColor||'#7c6bbf' : e.calColor||'#1d9e75';
-    const textColor = type==='school' ? '#c4b5f0' : '#5dcaa5';
-    return `<span class="chip" style="background:${bg};border-color:${borderColor};color:${textColor}">${dateStr ? dateStr+' · ' : ''}${e.summary||'Event'}</span>`;
+function renderCalChips(){
+  renderChips('apptChips',state.calEvents.appt||[],'personal');
+  renderChips('dueChips',state.calEvents.school||[],'school');
+}
+
+function renderChips(elId,events,type){
+  const el=document.getElementById(elId);
+  if(!events.length){ el.innerHTML='<span class="chip-empty">Nothing this week</span>'; return; }
+  const ws=getWeekStart(weekOffset);
+  const we=new Date(ws); we.setDate(we.getDate()+7);
+  const filtered=events.filter(e=>{
+    const start=e.start?.dateTime||e.start?.date||'';
+    if(!start) return false;
+    const d=start.includes('T')?new Date(start):new Date(start+'T00:00:00');
+    return d>=ws&&d<we;
+  });
+  if(!filtered.length){ el.innerHTML='<span class="chip-empty">Nothing this week</span>'; return; }
+  el.innerHTML=filtered.map(e=>{
+    const start=e.start?.dateTime||e.start?.date||'';
+    let d=null;
+    if(start){ if(start.includes('T')){ d=new Date(start); } else { const[y,m,day]=start.split('-').map(Number); d=new Date(y,m-1,day); } }
+    const dateStr=d?DAYS[d.getDay()].slice(0,3)+' '+d.getDate():'';
+    const bg=type==='school'?'#0d0b14':'#0b0f0d';
+    return `<span class="chip" style="background:${bg};border-color:${e.calColor};color:${e.calColor}">${dateStr?dateStr+' · ':''}${e.summary||'Event'}</span>`;
   }).join('');
+}
+
+function updateLastSyncedLabel(){
+  if(!state.lastSynced) return;
+  const d=new Date(state.lastSynced);
+  const str=d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' at '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  document.getElementById('lastSynced').textContent='Synced '+str;
 }
 
 // --- WEEK ---
 function getWeekStart(offset){
-  const d=new Date();
-  const day=d.getDay();
+  const d=new Date(); const day=d.getDay();
   const diff=day===0?-6:1-day;
   d.setDate(d.getDate()+diff+offset*7); d.setHours(0,0,0,0); return d;
 }
@@ -305,13 +310,13 @@ function dayKey(date){ return date.toISOString().slice(0,10); }
 function changeWeek(dir){
   if(dir===0) weekOffset=0; else weekOffset+=dir;
   renderWeekly();
-  if(accessToken) fetchCalendarEvents();
+  renderCalChips();
 }
 
 function renderWeekly(){
   const ws=getWeekStart(weekOffset);
   const we=new Date(ws); we.setDate(we.getDate()+6);
-  document.getElementById('weekTitle').textContent =
+  document.getElementById('weekTitle').textContent=
     MONTHS[ws.getMonth()]+' '+ws.getDate()+' – '+
     (ws.getMonth()!==we.getMonth()?MONTHS[we.getMonth()]+' ':'')+we.getDate()+', '+we.getFullYear();
   const wk=weekKey(weekOffset);
@@ -330,15 +335,7 @@ function renderWeeklyTodos(){
       <button class="del" onclick="deleteWeekly(${i})">×</button>
     </div>`).join('');
 }
-
-function addWeeklyTodo(){
-  const inp=document.getElementById('weeklyInput');
-  const v=inp.value.trim(); if(!v) return;
-  const wk=weekKey(weekOffset);
-  if(!state.weeklyTodos[wk]) state.weeklyTodos[wk]=[];
-  state.weeklyTodos[wk].push({text:v,done:false});
-  inp.value=''; save(); renderWeeklyTodos();
-}
+function addWeeklyTodo(){ const inp=document.getElementById('weeklyInput'); const v=inp.value.trim(); if(!v) return; const wk=weekKey(weekOffset); if(!state.weeklyTodos[wk]) state.weeklyTodos[wk]=[]; state.weeklyTodos[wk].push({text:v,done:false}); inp.value=''; save(); renderWeeklyTodos(); }
 function toggleWeekly(i){ const wk=weekKey(weekOffset); state.weeklyTodos[wk][i].done=!state.weeklyTodos[wk][i].done; save(); renderWeeklyTodos(); }
 function deleteWeekly(i){ const wk=weekKey(weekOffset); state.weeklyTodos[wk].splice(i,1); save(); renderWeeklyTodos(); }
 
@@ -347,13 +344,12 @@ function renderDays(ws){
   const grid=document.getElementById('daysGrid'); grid.innerHTML='';
   for(let i=0;i<7;i++){
     const d=new Date(ws); d.setDate(d.getDate()+i);
-    const dk=dayKey(d);
-    const isToday=d.getTime()===today.getTime();
+    const dk=dayKey(d); const isToday=d.getTime()===today.getTime();
     const card=document.createElement('div');
     card.className='day-card'+(isToday?' today':'');
     card.innerHTML=`
       <div class="day-header" onclick="toggleDay('${dk}',this)">
-        <div><span class="day-name">${DAYS[d.getDay()]}</span><span class="day-date" style="margin-left:8px">${MONTHS[d.getMonth()].slice(0,3)} ${d.getDate()}</span></div>
+        <div><span class="day-name">${DAYS[d.getDay()]}</span><span class="day-date">${MONTHS[d.getMonth()].slice(0,3)} ${d.getDate()}</span></div>
         <span class="day-toggle ${isToday?'open':''}">▾</span>
       </div>
       <div class="day-body ${isToday?'open':''}">
@@ -378,48 +374,17 @@ function renderDays(ws){
     renderDayTodos(dk);
   }
 }
-
 function toggleDay(dk,header){ const body=header.nextElementSibling; const arrow=header.querySelector('.day-toggle'); body.classList.toggle('open'); arrow.classList.toggle('open'); }
 function saveField(field,dk,v){ if(!state[field]) state[field]={}; state[field][dk]=v; save(); }
-
-function renderDayTodos(dk){
-  const todos=state.dayTodos[dk]||[];
-  const el=document.getElementById('dt-'+dk); if(!el) return;
-  el.innerHTML=todos.map((t,i)=>`
-    <div class="todo-item ${t.done?'done':''}">
-      <input type="checkbox" ${t.done?'checked':''} onchange="toggleDayTodo('${dk}',${i})">
-      <label onclick="toggleDayTodo('${dk}',${i})">${t.text}</label>
-      <button class="del" onclick="deleteDayTodo('${dk}',${i})">×</button>
-    </div>`).join('');
-}
+function renderDayTodos(dk){ const todos=state.dayTodos[dk]||[]; const el=document.getElementById('dt-'+dk); if(!el) return; el.innerHTML=todos.map((t,i)=>`<div class="todo-item ${t.done?'done':''}"><input type="checkbox" ${t.done?'checked':''} onchange="toggleDayTodo('${dk}',${i})"><label onclick="toggleDayTodo('${dk}',${i})">${t.text}</label><button class="del" onclick="deleteDayTodo('${dk}',${i})">×</button></div>`).join(''); }
 function addDayTodo(dk){ const inp=document.getElementById('dti-'+dk); const v=inp.value.trim(); if(!v) return; if(!state.dayTodos[dk]) state.dayTodos[dk]=[]; state.dayTodos[dk].push({text:v,done:false}); inp.value=''; save(); renderDayTodos(dk); }
 function toggleDayTodo(dk,i){ state.dayTodos[dk][i].done=!state.dayTodos[dk][i].done; save(); renderDayTodos(dk); }
 function deleteDayTodo(dk,i){ state.dayTodos[dk].splice(i,1); save(); renderDayTodos(dk); }
 
 // --- SHOPPING ---
 const LISTS=[{key:'sams',label:"Sam's Club"},{key:'misc',label:'Misc'},{key:'grocery',label:'Weekly groceries'}];
-function renderShopping(){
-  document.getElementById('shoppingLists').innerHTML=LISTS.map(l=>`
-    <div class="list-card">
-      <div class="list-title">${l.label}<button class="clear-btn" onclick="clearChecked('${l.key}')">Clear all checked</button></div>
-      <div id="sl-${l.key}"></div>
-      <div class="todo-input-row">
-        <input type="text" id="sli-${l.key}" placeholder="Add item..." onkeydown="if(event.key==='Enter')addShop('${l.key}')">
-        <button onclick="addShop('${l.key}')">Add</button>
-      </div>
-    </div>`).join('');
-  LISTS.forEach(l=>renderShopList(l.key));
-}
-function renderShopList(key){
-  const items=state.shopping[key]||[];
-  const el=document.getElementById('sl-'+key); if(!el) return;
-  el.innerHTML=items.map((t,i)=>`
-    <div class="todo-item">
-      <input type="checkbox" onchange="checkShop('${key}',${i},this.checked)">
-      <label>${t}</label>
-      <button class="del" onclick="deleteShop('${key}',${i})">×</button>
-    </div>`).join('')||'<div style="color:var(--text3);font-size:12px;padding:4px 0">List is empty</div>';
-}
+function renderShopping(){ document.getElementById('shoppingLists').innerHTML=LISTS.map(l=>`<div class="list-card"><div class="list-title">${l.label}<button class="clear-btn" onclick="clearChecked('${l.key}')">Clear all checked</button></div><div id="sl-${l.key}"></div><div class="todo-input-row"><input type="text" id="sli-${l.key}" placeholder="Add item..." onkeydown="if(event.key==='Enter')addShop('${l.key}')"><button onclick="addShop('${l.key}')">Add</button></div></div>`).join(''); LISTS.forEach(l=>renderShopList(l.key)); }
+function renderShopList(key){ const items=state.shopping[key]||[]; const el=document.getElementById('sl-'+key); if(!el) return; el.innerHTML=items.map((t,i)=>`<div class="todo-item"><input type="checkbox" onchange="checkShop('${key}',${i},this.checked)"><label>${t}</label><button class="del" onclick="deleteShop('${key}',${i})">×</button></div>`).join('')||'<div style="color:var(--text3);font-size:12px;padding:4px 0">List is empty</div>'; }
 function addShop(key){ const inp=document.getElementById('sli-'+key); const v=inp.value.trim(); if(!v) return; state.shopping[key].push(v); inp.value=''; save(); renderShopList(key); }
 function checkShop(key,i){ setTimeout(()=>{ state.shopping[key].splice(i,1); save(); renderShopList(key); },500); }
 function deleteShop(key,i){ state.shopping[key].splice(i,1); save(); renderShopList(key); }
@@ -434,26 +399,9 @@ function renderGoals(){
   const pct=total?Math.round(archived.length/total*100):0;
   document.getElementById('progressBar').style.width=pct+'%';
   document.getElementById('progressLabel').textContent=total?archived.length+' of '+total+' goals completed ('+pct+'%)':'Add your first goal below';
-  document.getElementById('goalsList').innerHTML=active.map(g=>{
-    const ri=state.goals.indexOf(g);
-    return `<div class="goal-item">
-      <input type="checkbox" onchange="toggleGoal(${ri})">
-      <label>${g.text}</label>
-      <button class="del" onclick="deleteGoal(${ri})">×</button>
-      <div class="goal-note-wrap"><textarea class="goal-note" rows="2" placeholder="Add notes, reflections..." onchange="saveGoalNote(${ri},this.value)">${g.note||''}</textarea></div>
-    </div>`;
-  }).join('')||'<div style="color:var(--text3);font-size:13px;padding:8px 0">No active goals — add one below</div>';
+  document.getElementById('goalsList').innerHTML=active.map(g=>{ const ri=state.goals.indexOf(g); return `<div class="goal-item"><input type="checkbox" onchange="toggleGoal(${ri})"><label>${g.text}</label><button class="del" onclick="deleteGoal(${ri})">×</button><div class="goal-note-wrap"><textarea class="goal-note" rows="2" placeholder="Add notes, reflections..." onchange="saveGoalNote(${ri},this.value)">${g.note||''}</textarea></div></div>`; }).join('')||'<div style="color:var(--text3);font-size:13px;padding:8px 0">No active goals — add one below</div>';
   const archSec=document.getElementById('archiveSection');
-  const archList=document.getElementById('archiveList');
-  if(archived.length){
-    archSec.style.display='block';
-    document.getElementById('archiveCount').textContent=archived.length;
-    archList.innerHTML=archived.map(g=>`
-      <div class="archive-item">
-        <div class="archive-item-text">${g.text}</div>
-        ${g.note?'<div class="archive-item-note">'+g.note+'</div>':''}
-      </div>`).join('');
-  } else { archSec.style.display='none'; }
+  if(archived.length){ archSec.style.display='block'; document.getElementById('archiveCount').textContent=archived.length; document.getElementById('archiveList').innerHTML=archived.map(g=>`<div class="archive-item"><div class="archive-item-text">${g.text}</div>${g.note?'<div class="archive-item-note">'+g.note+'</div>':''}</div>`).join(''); } else { archSec.style.display='none'; }
 }
 let archiveOpen=false;
 function toggleArchive(){ archiveOpen=!archiveOpen; document.getElementById('archiveList').style.display=archiveOpen?'block':'none'; document.getElementById('archiveArrow').textContent=archiveOpen?'▾':'▸'; }
@@ -466,6 +414,9 @@ function saveGoalNote(i,v){ state.goals[i].note=v; save(); }
 renderWeekly();
 renderShopping();
 renderGoals();
+renderCalChips();
+updateLastSyncedLabel();
+if(state.lastSynced) document.getElementById('syncBtn').style.display='block';
 </script>
 </body>
 </html>
