@@ -251,7 +251,7 @@ async function fetchCalendarEvents() {
       const name = cal.summary.trim();
       if(name === 'School Assignments'){
         schoolEvents.push(...evts);
-      } else if(name === 'Alexa Kanehira'){
+      } else if(name === 'Alexa Kanehira' || name === 'My Calendar' || cal.primary){
         apptEvents.push(...evts);
       }
     }
@@ -271,7 +271,15 @@ function renderChips(elId, events, type) {
   }
   el.innerHTML = events.map(e => {
     const start = e.start?.dateTime || e.start?.date || '';
-    const d = start ? new Date(start) : null;
+    let d = null;
+    if(start){
+      if(start.includes('T')){
+        d = new Date(start);
+      } else {
+        const [y,m,day] = start.split('-').map(Number);
+        d = new Date(y, m-1, day);
+      }
+    }
     const dateStr = d ? DAYS[d.getDay()].slice(0,3)+' '+d.getDate() : '';
     const bg = type==='school' ? '#1a1535' : '#131d1a';
     const borderColor = type==='school' ? e.calColor||'#7c6bbf' : e.calColor||'#1d9e75';
@@ -453,5 +461,4 @@ renderShopping();
 renderGoals();
 </script>
 </body>
-</html>
 </html>
