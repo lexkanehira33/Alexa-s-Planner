@@ -231,8 +231,12 @@ async function fetchCalendarEvents() {
     const tMin = ws.toISOString();
     const tMax = we.toISOString();
 
-    const calList = await fetchCalendarList();
+    const [calList, colorData] = await Promise.all([
+      fetchCalendarList(),
+      fetchCalendarColors()
+    ]);
     const cals = calList.items || [];
+    const eventColors = colorData.event || {};
 
     let apptEvents = [];
     let schoolEvents = [];
@@ -244,7 +248,7 @@ async function fetchCalendarEvents() {
       const evts = (d.items||[]).map(e=>({
         ...e,
         calName: cal.summary,
-        calColor: cal.backgroundColor || '#7c6bbf',
+        calColor: e.colorId ? (eventColors[e.colorId]?.background || cal.backgroundColor || '#7c6bbf') : (cal.backgroundColor || '#7c6bbf'),
         calId: cal.id
       }));
 
@@ -290,7 +294,10 @@ function renderChips(elId, events, type) {
 
 // --- WEEK ---
 function getWeekStart(offset){
-  const d=new Date(); d.setDate(d.getDate()-d.getDay()+offset*7); d.setHours(0,0,0,0); return d;
+  const d=new Date();
+  const day=d.getDay();
+  const diff=day===0?-6:1-day;
+  d.setDate(d.getDate()+diff+offset*7); d.setHours(0,0,0,0); return d;
 }
 function weekKey(offset){ return getWeekStart(offset).toISOString().slice(0,10); }
 function dayKey(date){ return date.toISOString().slice(0,10); }
