@@ -248,10 +248,10 @@ async function fetchCalendarEvents() {
         calId: cal.id
       }));
 
-      const name = cal.summary.toLowerCase();
-      if(name.includes('school') || name.includes('due') || name.includes('assignment')){
+      const name = cal.summary.trim();
+      if(name === 'School Assignments'){
         schoolEvents.push(...evts);
-      } else {
+      } else if(name === 'Alexa Kanehira'){
         apptEvents.push(...evts);
       }
     }
@@ -453,4 +453,5 @@ renderShopping();
 renderGoals();
 </script>
 </body>
+</html>
 </html>
