@@ -179,8 +179,12 @@ let accessToken=null;
 let state=JSON.parse(localStorage.getItem('plannerState3')||'null')||{
   weeklyTodos:{},daySchedule:{},daySchool:{},dayTodos:{},
   shopping:{sams:[],misc:[],grocery:[]},goals:[],
-  calEvents:{appt:[],school:[]},lastSynced:null
+  calEvents:{},lastSynced:null
 };
+if(!state.calEvents || Array.isArray(state.calEvents) || state.calEvents.appt){
+  state.calEvents={};
+  save();
+}
 function save(){ localStorage.setItem('plannerState3',JSON.stringify(state)); }
 
 function showPage(id,btn){
