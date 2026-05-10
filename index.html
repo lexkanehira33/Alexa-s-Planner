@@ -77,76 +77,6 @@
   .list-title .clear-btn{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;padding:2px 6px;}
   .list-title .clear-btn:hover{color:var(--purple);}
 
-  /* GOALS */
-  .goals-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;}
-  .year-label{font-size:22px;font-weight:500;color:var(--purple);margin-bottom:4px;}
-  .goals-sub{font-size:12px;color:var(--text3);margin-bottom:16px;}
-  .goal-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;}
-  .goal-item:last-child{border-bottom:none;}
-  .goal-item input[type=checkbox]{margin-top:3px;accent-color:var(--purple3);width:15px;height:15px;cursor:pointer;flex-shrink:0;}
-  .goal-item label{font-size:14px;color:var(--text);cursor:pointer;flex:1;line-height:1.5;min-width:120px;}
-  .goal-item .del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 4px;}
-  .goal-item .del:hover{color:#e24b4a;}
-  .goal-note-wrap{width:100%;padding-left:25px;margin-top:4px;}
-  .goal-note{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 10px;color:var(--text2);font-size:12px;resize:none;outline:none;font-family:inherit;line-height:1.5;}
-  .goal-note:focus{border-color:var(--purple2);}
-  .archive-section{margin-top:24px;}
-  .archive-toggle{background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;padding:0;display:flex;align-items:center;gap:6px;letter-spacing:0.05em;text-transform:uppercase;font-weight:500;}
-  .archive-toggle:hover{color:var(--purple);}
-  .archive-list{margin-top:12px;}
-  .archive-item{padding:10px 0;border-bottom:1px solid var(--border);}
-  .archive-item:last-child{border-bottom:none;}
-  .archive-item-text{font-size:14px;color:var(--text3);text-decoration:line-through;margin-bottom:4px;}
-  .archive-item-note{font-size:12px;color:var(--text3);padding-left:4px;font-style:italic;}
-  .progress-bar-wrap{height:3px;background:var(--bg4);border-radius:4px;margin-bottom:16px;}
-  .progress-bar{height:3px;background:var(--purple2);border-radius:4px;transition:width 0.3s;}
-  .progress-label{font-size:11px;color:var(--text3);margin-bottom:12px;}
-  .add-goal-row{display:flex;gap:8px;margin-top:14px;}
-  .add-goal-row input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;color:var(--text);font-size:13px;outline:none;}
-  .add-goal-row input:focus{border-color:var(--purple2);}
-  .add-goal-row button{background:var(--purple-soft);border:1px solid var(--purple2);color:var(--accent);padding:9px 16px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;white-space:nowrap;}
-  .last-synced{font-size:11px;color:var(--text3);margin-left:4px;}
-
-  /* HABIT TRACKER */
-  .habit-page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-  .habit-page-title{font-size:18px;font-weight:500;color:var(--accent);}
-  .add-habit-btn{background:var(--purple-soft);border:1px solid var(--purple2);color:var(--accent);padding:8px 16px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;}
-  .habits-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
-  .habit-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;position:relative;}
-  .habit-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;}
-  .habit-title{font-size:15px;font-weight:600;color:var(--accent);}
-  .habit-menu-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;line-height:1;padding:0 4px;}
-  .habit-menu-btn:hover{color:var(--purple);}
-  .habit-meta{font-size:11px;color:var(--text3);margin-bottom:4px;}
-  .habit-rules{font-size:12px;color:var(--text2);margin-bottom:4px;font-style:italic;}
-  .habit-reward{font-size:12px;color:var(--purple);margin-bottom:12px;}
-  .habit-progress-text{font-size:11px;color:var(--text3);margin-bottom:8px;}
-  .habit-dots{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-bottom:12px;}
-  .habit-dot{width:100%;aspect-ratio:1;border-radius:4px;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);transition:all 0.15s;}
-  .habit-dot:hover{border-color:var(--purple2);}
-  .habit-dot.filled-1{background:#2d1f4e;border-color:#4a3580;}
-  .habit-dot.filled-2{background:#4a3580;border-color:#6a50a8;}
-  .habit-dot.filled-3{background:#7c6bbf;border-color:#a393d6;}
-  .habit-dot.filled-4{background:#a393d6;border-color:#c4b5f0;}
-  .habit-dot.filled-5{background:#c4b5f0;border-color:#e0d8ff;}
-  .habit-complete-btn{width:100%;padding:8px;background:var(--purple-soft);border:1px solid var(--purple2);color:var(--accent);border-radius:var(--radius-sm);cursor:pointer;font-size:12px;}
-  .habit-complete-btn:hover{background:#2a1f48;}
-  .habit-complete-btn:disabled{opacity:0.4;cursor:not-allowed;}
-
-  /* MODAL */
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000;display:none;}
-  .modal-overlay.open{display:flex;}
-  .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:24px;width:90%;max-width:400px;}
-  .modal h3{font-size:16px;font-weight:600;color:var(--accent);margin-bottom:16px;}
-  .modal label{font-size:12px;color:var(--text3);display:block;margin-bottom:4px;margin-top:12px;}
-  .modal input,.modal textarea,.modal select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;color:var(--text);font-size:13px;outline:none;font-family:inherit;}
-  .modal input:focus,.modal textarea:focus{border-color:var(--purple2);}
-  .modal textarea{resize:none;}
-  .modal-btns{display:flex;gap:8px;margin-top:16px;justify-content:flex-end;}
-  .modal-btns button{padding:8px 18px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;}
-  .btn-cancel{background:transparent;border:1px solid var(--border2);color:var(--text2);}
-  .btn-save{background:var(--purple-soft);border:1px solid var(--purple2);color:var(--accent);}
-
   /* SPENDING */
   .spending-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
   @media(max-width:680px){.spending-layout{grid-template-columns:1fr;}}
@@ -157,9 +87,10 @@
   .form-row input,.form-row select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;color:var(--text);font-size:13px;outline:none;}
   .form-row input:focus,.form-row select:focus{border-color:var(--purple2);}
   .form-row select option{background:var(--bg3);}
-  .radio-row{display:flex;gap:12px;margin-top:4px;}
-  .radio-row label{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);cursor:pointer;}
-  .radio-row input[type=radio]{accent-color:var(--purple3);}
+  /* FIXED RADIO BUTTONS */
+  .radio-row{display:flex;gap:16px;margin-top:6px;flex-wrap:wrap;}
+  .radio-label{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);cursor:pointer;line-height:1;}
+  .radio-label input[type=radio]{width:14px;height:14px;accent-color:var(--purple3);cursor:pointer;flex-shrink:0;margin:0;}
   .submit-btn{width:100%;padding:9px;background:var(--purple-soft);border:1px solid var(--purple2);color:var(--accent);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;margin-top:6px;}
   .entries-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;}
   .entries-table th{text-align:left;padding:6px 8px;color:var(--text3);font-weight:500;border-bottom:1px solid var(--border);font-size:11px;letter-spacing:0.05em;}
@@ -189,6 +120,7 @@
   .month-archive-end-btn{padding:7px 14px;border-radius:var(--radius-sm);background:transparent;border:1px solid var(--border2);color:var(--text3);cursor:pointer;font-size:12px;}
   .month-archive-end-btn:hover{border-color:var(--purple2);color:var(--accent);}
   .no-entries{color:var(--text3);font-size:12px;font-style:italic;padding:8px 0;}
+  .last-synced{font-size:11px;color:var(--text3);margin-left:4px;}
 </style>
 </head>
 <body>
@@ -196,8 +128,6 @@
 <nav class="nav">
   <button class="nav-btn active" onclick="showPage('weekly',this)">Weekly</button>
   <button class="nav-btn" onclick="showPage('shopping',this)">Shopping</button>
-  <button class="nav-btn" onclick="showPage('goals',this)">Goals</button>
-  <button class="nav-btn" onclick="showPage('habits',this)">Habits</button>
   <button class="nav-btn" onclick="showPage('spending',this)">Spending</button>
   <div class="nav-right">
     <span class="last-synced" id="lastSynced"></span>
@@ -240,36 +170,6 @@
   <div class="lists-grid" id="shoppingLists"></div>
 </div>
 
-<!-- GOALS -->
-<div id="goals" class="page">
-  <div class="goals-section">
-    <div class="year-label" id="yearLabel"></div>
-    <div class="goals-sub">Annual goals — completed items move to the archive below</div>
-    <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
-    <div class="progress-label" id="progressLabel"></div>
-    <div id="goalsList"></div>
-    <div class="add-goal-row">
-      <input type="text" id="goalInput" placeholder="Add a goal for this year..." onkeydown="if(event.key==='Enter')addGoal()">
-      <button onclick="addGoal()">Add goal</button>
-    </div>
-  </div>
-  <div class="goals-section archive-section" id="archiveSection" style="display:none">
-    <button class="archive-toggle" onclick="toggleArchive()">
-      <span id="archiveArrow">▸</span> Completed goals (<span id="archiveCount">0</span>)
-    </button>
-    <div class="archive-list" id="archiveList" style="display:none"></div>
-  </div>
-</div>
-
-<!-- HABITS -->
-<div id="habits" class="page">
-  <div class="habit-page-header">
-    <div class="habit-page-title">Habit Trackers</div>
-    <button class="add-habit-btn" onclick="openHabitModal()">+ New Tracker</button>
-  </div>
-  <div class="habits-grid" id="habitsGrid"></div>
-</div>
-
 <!-- SPENDING -->
 <div id="spending" class="page">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
@@ -296,8 +196,8 @@
         <div class="form-row">
           <label>Type</label>
           <div class="radio-row">
-            <label><input type="radio" name="entryType" value="spending" checked onchange="toggleCatField(this)"> Spending</label>
-            <label><input type="radio" name="entryType" value="income" onchange="toggleCatField(this)"> Income</label>
+            <label class="radio-label"><input type="radio" name="entryType" value="spending" checked onchange="toggleCatField(this)"> Spending</label>
+            <label class="radio-label"><input type="radio" name="entryType" value="income" onchange="toggleCatField(this)"> Income</label>
           </div>
         </div>
         <div id="catFields">
@@ -313,8 +213,8 @@
           <div class="form-row">
             <label>Want or Need?</label>
             <div class="radio-row">
-              <label><input type="radio" name="wantNeed" value="need" checked> Need</label>
-              <label><input type="radio" name="wantNeed" value="want"> Want</label>
+              <label class="radio-label"><input type="radio" name="wantNeed" value="need" checked> Need</label>
+              <label class="radio-label"><input type="radio" name="wantNeed" value="want"> Want</label>
             </div>
           </div>
         </div>
@@ -336,23 +236,6 @@
   <div class="month-archive" id="monthArchive"></div>
 </div>
 
-<!-- HABIT MODAL -->
-<div class="modal-overlay" id="habitModal">
-  <div class="modal">
-    <h3>New Habit Tracker</h3>
-    <label>Title</label>
-    <input type="text" id="hTitle" placeholder="e.g. Read every day">
-    <label>Rules</label>
-    <textarea id="hRules" rows="2" placeholder="e.g. At least 20 pages per day"></textarea>
-    <label>Reward when complete</label>
-    <input type="text" id="hReward" placeholder="e.g. Buy that book I wanted">
-    <div class="modal-btns">
-      <button class="btn-cancel" onclick="closeHabitModal()">Cancel</button>
-      <button class="btn-save" onclick="saveHabit()">Create Tracker</button>
-    </div>
-  </div>
-</div>
-
 <script>
 const CLIENT_ID='275549994850-knh5mqkh36io08c7ingl5i1v8k2hfrd6.apps.googleusercontent.com';
 const SCOPES='https://www.googleapis.com/auth/calendar.readonly';
@@ -364,12 +247,10 @@ let accessToken=null;
 
 let state=JSON.parse(localStorage.getItem('plannerState4')||'null')||{
   weeklyTodos:{},daySchedule:{},daySchool:{},dayTodos:{},
-  shopping:{sams:[],misc:[],grocery:[]},goals:[],
+  shopping:{sams:[],misc:[],grocery:[]},
   calEvents:{},lastSynced:null,
-  habits:[],
   spending:{entries:[],archived:[]}
 };
-if(!state.habits) state.habits=[];
 if(!state.spending) state.spending={entries:[],archived:[]};
 if(!state.calEvents||Array.isArray(state.calEvents)) state.calEvents={};
 
@@ -534,11 +415,19 @@ function renderDays(ws){
       <div class="day-body ${isToday?'open':''}">
         <div class="day-section">
           <div class="day-section-label">Schedule</div>
-          <textarea class="day-textarea" rows="3" placeholder="Write out your day..." onchange="saveField('daySchedule','${dk}',this.value)">${state.daySchedule[dk]||''}</textarea>
+          <div id="ds-${dk}"></div>
+          <div class="todo-input-row">
+            <input type="text" id="dsi-${dk}" placeholder="Add schedule item..." onkeydown="if(event.key==='Enter')addDaySchedule('${dk}')">
+            <button onclick="addDaySchedule('${dk}')">Add</button>
+          </div>
         </div>
         <div class="day-section">
           <div class="day-section-label">School</div>
-          <textarea class="day-textarea" rows="2" placeholder="What do you want to accomplish today for school?" onchange="saveField('daySchool','${dk}',this.value)">${state.daySchool[dk]||''}</textarea>
+          <div id="dsc-${dk}"></div>
+          <div class="todo-input-row">
+            <input type="text" id="dsci-${dk}" placeholder="Add school task..." onkeydown="if(event.key==='Enter')addDaySchool('${dk}')">
+            <button onclick="addDaySchool('${dk}')">Add</button>
+          </div>
         </div>
         <div class="day-section">
           <div class="day-section-label">To-do</div>
@@ -550,6 +439,8 @@ function renderDays(ws){
         </div>
       </div>`;
     grid.appendChild(card);
+    renderDaySchedule(dk);
+    renderDaySchool(dk);
     renderDayTodos(dk);
   }
 }
@@ -560,6 +451,16 @@ function addDayTodo(dk){ const inp=document.getElementById('dti-'+dk); const v=i
 function toggleDayTodo(dk,i){ state.dayTodos[dk][i].done=!state.dayTodos[dk][i].done; save(); renderDayTodos(dk); }
 function deleteDayTodo(dk,i){ state.dayTodos[dk].splice(i,1); save(); renderDayTodos(dk); }
 
+function renderDaySchedule(dk){ const items=state.dayScheduleItems&&state.dayScheduleItems[dk]||[]; const el=document.getElementById('ds-'+dk); if(!el) return; el.innerHTML=items.map((t,i)=>`<div class="todo-item ${t.done?'done':''}"><input type="checkbox" ${t.done?'checked':''} onchange="toggleDaySchedule('${dk}',${i})"><label onclick="toggleDaySchedule('${dk}',${i})">${t.text}</label><button class="del" onclick="deleteDaySchedule('${dk}',${i})">×</button></div>`).join(''); }
+function addDaySchedule(dk){ const inp=document.getElementById('dsi-'+dk); const v=inp.value.trim(); if(!v) return; if(!state.dayScheduleItems) state.dayScheduleItems={}; if(!state.dayScheduleItems[dk]) state.dayScheduleItems[dk]=[]; state.dayScheduleItems[dk].push({text:v,done:false}); inp.value=''; save(); renderDaySchedule(dk); }
+function toggleDaySchedule(dk,i){ if(!state.dayScheduleItems||!state.dayScheduleItems[dk]) return; state.dayScheduleItems[dk][i].done=!state.dayScheduleItems[dk][i].done; save(); renderDaySchedule(dk); }
+function deleteDaySchedule(dk,i){ state.dayScheduleItems[dk].splice(i,1); save(); renderDaySchedule(dk); }
+
+function renderDaySchool(dk){ const items=state.daySchoolItems&&state.daySchoolItems[dk]||[]; const el=document.getElementById('dsc-'+dk); if(!el) return; el.innerHTML=items.map((t,i)=>`<div class="todo-item ${t.done?'done':''}"><input type="checkbox" ${t.done?'checked':''} onchange="toggleDaySchool('${dk}',${i})"><label onclick="toggleDaySchool('${dk}',${i})">${t.text}</label><button class="del" onclick="deleteDaySchool('${dk}',${i})">×</button></div>`).join(''); }
+function addDaySchool(dk){ const inp=document.getElementById('dsci-'+dk); const v=inp.value.trim(); if(!v) return; if(!state.daySchoolItems) state.daySchoolItems={}; if(!state.daySchoolItems[dk]) state.daySchoolItems[dk]=[]; state.daySchoolItems[dk].push({text:v,done:false}); inp.value=''; save(); renderDaySchool(dk); }
+function toggleDaySchool(dk,i){ if(!state.daySchoolItems||!state.daySchoolItems[dk]) return; state.daySchoolItems[dk][i].done=!state.daySchoolItems[dk][i].done; save(); renderDaySchool(dk); }
+function deleteDaySchool(dk,i){ state.daySchoolItems[dk].splice(i,1); save(); renderDaySchool(dk); }
+
 // ─── SHOPPING ─────────────────────────────────────────────────────────────
 const LISTS=[{key:'sams',label:"Sam's Club"},{key:'misc',label:'Misc'},{key:'grocery',label:'Weekly groceries'}];
 function renderShopping(){ document.getElementById('shoppingLists').innerHTML=LISTS.map(l=>`<div class="list-card"><div class="list-title">${l.label}<button class="clear-btn" onclick="clearChecked('${l.key}')">Clear all checked</button></div><div id="sl-${l.key}"></div><div class="todo-input-row"><input type="text" id="sli-${l.key}" placeholder="Add item..." onkeydown="if(event.key==='Enter')addShop('${l.key}')"><button onclick="addShop('${l.key}')">Add</button></div></div>`).join(''); LISTS.forEach(l=>renderShopList(l.key)); }
@@ -568,76 +469,6 @@ function addShop(key){ const inp=document.getElementById('sli-'+key); const v=in
 function checkShop(key,i){ setTimeout(()=>{ state.shopping[key].splice(i,1); save(); renderShopList(key); },500); }
 function deleteShop(key,i){ state.shopping[key].splice(i,1); save(); renderShopList(key); }
 function clearChecked(key){ renderShopList(key); }
-
-// ─── GOALS ────────────────────────────────────────────────────────────────
-function renderGoals(){
-  document.getElementById('yearLabel').textContent=new Date().getFullYear()+' Goals';
-  const active=state.goals.filter(g=>!g.done);
-  const archived=state.goals.filter(g=>g.done);
-  const total=state.goals.length;
-  const pct=total?Math.round(archived.length/total*100):0;
-  document.getElementById('progressBar').style.width=pct+'%';
-  document.getElementById('progressLabel').textContent=total?archived.length+' of '+total+' goals completed ('+pct+'%)':'Add your first goal below';
-  document.getElementById('goalsList').innerHTML=active.map(g=>{ const ri=state.goals.indexOf(g); return `<div class="goal-item"><input type="checkbox" onchange="toggleGoal(${ri})"><label>${g.text}</label><button class="del" onclick="deleteGoal(${ri})">×</button><div class="goal-note-wrap"><textarea class="goal-note" rows="2" placeholder="Add notes, reflections..." onchange="saveGoalNote(${ri},this.value)">${g.note||''}</textarea></div></div>`; }).join('')||'<div style="color:var(--text3);font-size:13px;padding:8px 0">No active goals — add one below</div>';
-  const archSec=document.getElementById('archiveSection');
-  if(archived.length){ archSec.style.display='block'; document.getElementById('archiveCount').textContent=archived.length; document.getElementById('archiveList').innerHTML=archived.map(g=>`<div class="archive-item"><div class="archive-item-text">${g.text}</div>${g.note?'<div class="archive-item-note">'+g.note+'</div>':''}</div>`).join(''); } else { archSec.style.display='none'; }
-}
-let archiveOpen=false;
-function toggleArchive(){ archiveOpen=!archiveOpen; document.getElementById('archiveList').style.display=archiveOpen?'block':'none'; document.getElementById('archiveArrow').textContent=archiveOpen?'▾':'▸'; }
-function addGoal(){ const inp=document.getElementById('goalInput'); const v=inp.value.trim(); if(!v) return; state.goals.push({text:v,done:false,note:''}); inp.value=''; save(); renderGoals(); }
-function toggleGoal(i){ state.goals[i].done=!state.goals[i].done; save(); renderGoals(); }
-function deleteGoal(i){ state.goals.splice(i,1); save(); renderGoals(); }
-function saveGoalNote(i,v){ state.goals[i].note=v; save(); }
-
-// ─── HABIT TRACKER ────────────────────────────────────────────────────────
-function openHabitModal(){ document.getElementById('habitModal').classList.add('open'); document.getElementById('hTitle').focus(); }
-function closeHabitModal(){ document.getElementById('habitModal').classList.remove('open'); document.getElementById('hTitle').value=''; document.getElementById('hRules').value=''; document.getElementById('hReward').value=''; }
-function saveHabit(){
-  const title=document.getElementById('hTitle').value.trim();
-  if(!title) return;
-  state.habits.push({ id:Date.now(), title, rules:document.getElementById('hRules').value.trim(), reward:document.getElementById('hReward').value.trim(), dots:new Array(30).fill(false) });
-  save(); closeHabitModal(); renderHabits();
-}
-function renderHabits(){
-  const grid=document.getElementById('habitsGrid');
-  if(!state.habits.length){ grid.innerHTML='<div style="color:var(--text3);font-size:13px;grid-column:1/-1;padding:20px 0">No trackers yet — click + New Tracker to get started</div>'; return; }
-  grid.innerHTML=state.habits.map((h,hi)=>{
-    const filled=h.dots.filter(Boolean).length;
-    const complete=filled===30;
-    const dotsHtml=h.dots.map((on,di)=>{
-      const level=on?Math.min(5,Math.ceil((di+1)/6)):0;
-      return `<div class="habit-dot${on?' filled-'+level:''}" onclick="toggleDot(${hi},${di})" title="Day ${di+1}"></div>`;
-    }).join('');
-    return `<div class="habit-card">
-      <div class="habit-card-header">
-        <div class="habit-title">${h.title}</div>
-        <button class="habit-menu-btn" onclick="deleteHabit(${hi})" title="Delete tracker">×</button>
-      </div>
-      ${h.rules?`<div class="habit-rules">📋 ${h.rules}</div>`:''}
-      ${h.reward?`<div class="habit-reward">🎁 ${h.reward}</div>`:''}
-      <div class="habit-progress-text">${filled} / 30 completed</div>
-      <div class="habit-dots">${dotsHtml}</div>
-      <button class="habit-complete-btn" onclick="completeHabit(${hi})" ${!complete?'disabled':''}>
-        ${complete?'✨ Mark as Complete & Clear':'Complete all 30 to finish'}
-      </button>
-    </div>`;
-  }).join('');
-}
-function toggleDot(hi,di){
-  state.habits[hi].dots[di]=!state.habits[hi].dots[di];
-  save(); renderHabits();
-}
-function completeHabit(hi){
-  const h=state.habits[hi];
-  if(!h.dots.every(Boolean)) return;
-  if(confirm(`🎉 Amazing! You completed "${h.title}"!\n\nReward: ${h.reward||'You earned it!'}\n\nClear this tracker?`)){
-    state.habits.splice(hi,1);
-    save(); renderHabits();
-  }
-}
-function deleteHabit(hi){
-  if(confirm('Delete this tracker? Progress will be lost.')) { state.habits.splice(hi,1); save(); renderHabits(); }
-}
 
 // ─── SPENDING ─────────────────────────────────────────────────────────────
 const CAT_LABELS={bills:'Bills',grocery:'Grocery',health:'Health / Beauty',misc:'Misc',income:'Income'};
@@ -655,7 +486,6 @@ function addEntry(){
   const amount=parseFloat(document.getElementById('entryAmount').value);
   const type=document.querySelector('input[name="entryType"]:checked').value;
   if(!date||!name||isNaN(amount)||amount<=0) return;
-
   const entry={id:Date.now(),date,name,amount,type};
   if(type==='spending'){
     entry.category=document.getElementById('entryCategory').value;
@@ -680,15 +510,12 @@ function endMonth(){
   const label=MONTHS[parseInt(m)-1]+' '+y;
   const entries=state.spending.entries;
   if(!entries.length){ alert('No entries to archive.'); return; }
-
-  // Build summary
   const cats={bills:0,grocery:0,health:0,misc:0};
   let totalSpend=0, totalIncome=0, needs=0, wants=0;
   entries.forEach(e=>{
     if(e.type==='income'){ totalIncome+=e.amount; }
     else { totalSpend+=e.amount; cats[e.category]=(cats[e.category]||0)+e.amount; if(e.wantNeed==='need') needs+=e.amount; else wants+=e.amount; }
   });
-
   state.spending.archived.unshift({label,mk,totalSpend,totalIncome,needs,wants,cats});
   state.spending.entries=[];
   save(); renderSpending();
@@ -697,7 +524,6 @@ function endMonth(){
 function renderSpending(){
   const n=new Date();
   document.getElementById('spendingMonthTitle').textContent=MONTHS[n.getMonth()]+' '+n.getFullYear()+' — Spending';
-
   const entries=state.spending.entries;
   const cats={bills:0,grocery:0,health:0,misc:0};
   let totalSpend=0,totalIncome=0,needs=0,wants=0;
@@ -706,36 +532,26 @@ function renderSpending(){
     else{ totalSpend+=e.amount; cats[e.category]=(cats[e.category]||0)+e.amount; if(e.wantNeed==='need') needs+=e.amount; else wants+=e.amount; }
   });
   const net=totalIncome-totalSpend;
-
-  // Summary stats
   document.getElementById('spendingSummary').innerHTML=`
     <div class="summary-stat"><div class="summary-stat-label">Income</div><div class="summary-stat-val" style="color:#5dcaa5">$${totalIncome.toFixed(2)}</div></div>
     <div class="summary-stat"><div class="summary-stat-label">Spent</div><div class="summary-stat-val" style="color:#c084fc">$${totalSpend.toFixed(2)}</div></div>
     <div class="summary-stat"><div class="summary-stat-label">Net</div><div class="summary-stat-val" style="color:${net>=0?'#5dcaa5':'#e24b4a'}">$${net.toFixed(2)}</div></div>
     <div class="summary-stat"><div class="summary-stat-label">Needs</div><div class="summary-stat-val" style="color:#6db8e0">$${needs.toFixed(2)}</div></div>
     <div class="summary-stat"><div class="summary-stat-label">Wants</div><div class="summary-stat-val" style="color:#a393d6">$${wants.toFixed(2)}</div></div>`;
-
-  // Donut chart
   drawDonut(cats, totalSpend);
-
-  // Entries table
   const sorted=[...entries].sort((a,b)=>new Date(b.date)-new Date(a.date));
   document.getElementById('entriesTable').innerHTML=sorted.length?`
     <table class="entries-table">
       <thead><tr><th>Date</th><th>Name</th><th>Amount</th><th>Category</th><th>Type</th><th></th></tr></thead>
       <tbody>${sorted.map(e=>`
         <tr>
-          <td>${e.date}</td>
-          <td>${e.name}</td>
-          <td>$${e.amount.toFixed(2)}</td>
+          <td>${e.date}</td><td>${e.name}</td><td>$${e.amount.toFixed(2)}</td>
           <td>${e.type==='income'?'—':CAT_LABELS[e.category]||e.category}</td>
           <td>${e.type==='income'?'<span class="tag tag-income">Income</span>':e.wantNeed==='need'?'<span class="tag tag-need">Need</span>':'<span class="tag tag-want">Want</span>'}</td>
           <td><button class="del-entry" onclick="deleteEntry(${e.id})">×</button></td>
         </tr>`).join('')}
       </tbody>
     </table>`:'<div class="no-entries">No entries yet — add one above</div>';
-
-  // Archive
   const arch=document.getElementById('monthArchive');
   if(state.spending.archived.length){
     arch.innerHTML=`<div class="month-archive-title"><span>Past Months</span></div>`+
@@ -760,36 +576,26 @@ function drawDonut(cats, total){
   const ctx=canvas.getContext('2d');
   const W=220,H=220,cx=W/2,cy=H/2,r=80,inner=52;
   ctx.clearRect(0,0,W,H);
-
   const data=Object.entries(cats).filter(([,v])=>v>0);
   const legend=document.getElementById('chartLegend');
-
   if(!data.length){
     ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fillStyle='#1c1c1c'; ctx.fill();
     ctx.beginPath(); ctx.arc(cx,cy,inner,0,Math.PI*2); ctx.fillStyle='#080808'; ctx.fill();
     legend.innerHTML='<div style="color:var(--text3);font-size:12px;font-style:italic">No spending yet</div>';
     return;
   }
-
   let start=-Math.PI/2;
   data.forEach(([cat,val])=>{
     const slice=(val/total)*Math.PI*2;
     ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,start,start+slice); ctx.closePath();
-    ctx.fillStyle=CAT_COLORS[cat]||'#555';
-    ctx.fill();
+    ctx.fillStyle=CAT_COLORS[cat]||'#555'; ctx.fill();
     start+=slice;
   });
-
-  // Inner circle cutout
   ctx.beginPath(); ctx.arc(cx,cy,inner,0,Math.PI*2); ctx.fillStyle='#080808'; ctx.fill();
-
-  // Center text
   ctx.fillStyle='#c4b5f0'; ctx.font='bold 15px -apple-system,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
   ctx.fillText('$'+total.toFixed(0),cx,cy-8);
   ctx.fillStyle='#555260'; ctx.font='11px -apple-system,sans-serif';
   ctx.fillText('this month',cx,cy+10);
-
-  // Legend
   legend.innerHTML=data.map(([cat,val])=>`
     <div class="legend-item">
       <div class="legend-dot" style="background:${CAT_COLORS[cat]}"></div>
@@ -799,13 +605,9 @@ function drawDonut(cats, total){
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────
-// Set today's date as default for spending form
 document.getElementById('entryDate').value=new Date().toISOString().slice(0,10);
-
 renderWeekly();
 renderShopping();
-renderGoals();
-renderHabits();
 renderSpending();
 renderCalChips();
 updateLastSyncedLabel();
